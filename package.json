@@ -1,0 +1,68 @@
+{
+  "name": "one",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@harmony-js/crypto": "^0.1.56",
+    "@metamask/onboarding": "^1.0.1",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@walletconnect/client": "^2.0.0-beta.14",
+    "@web3-react/walletconnect-connector": "^6.2.0",
+    "big-number-input": "^1.0.3",
+    "bootstrap": "^5.0.2",
+    "ethers": "^5.4.1",
+    "react": "^17.0.2",
+    "react-bootstrap": "^1.6.1",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-modal": "^3.14.3",
+    "react-native": "^0.66.4",
+    "react-native-tab-view": "^3.1.1",
+    "react-native-web": "^0.17.5",
+    "react-scripts": "4.0.3",
+    "sass": "^1.35.2",
+    "styled-components": "^5.3.3",
+    "typeface-nunito": "^1.1.13",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@typechain/ethers-v5": "^7.0.1",
+    "hardhat": "^2.4.3",
+    "hardhat-deploy": "^0.8.11",
+    "hardhat-deploy-ethers": "^0.3.0-beta.10",
+    "hardhat-typechain": "^0.3.5",
+    "ts-generator": "^0.1.1",
+    "ts-morph": "^11.0.3",
+    "ts-node": "^10.1.0",
+    "typechain": "^4.0.3",
+    "typescript": "^4.3.5"
+  }
+}

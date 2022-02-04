@@ -1,0 +1,249 @@
+@import './index.scss';
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-bottom: 1px solid #CCC;
+}
+
+.header .logo {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.header button {
+    height: 40px;
+    margin-top: 0 !important;
+}
+
+.btn-connect-wallet {
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ReactModal__Overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+}
+
+.ReactModal__Content {
+    width: 400px;
+    height: auto;
+    padding: 0 !important;
+    border-radius: $border-radius !important;
+    background: $color-primary !important;
+    inset: initial !important;
+}
+
+.ReactModal__Content .modal-header {
+    padding: 1em;
+}
+
+.ReactModal__Content .modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.ReactModal__Content .modal-content {
+    padding: 1em;
+    border: none;
+    background: inherit !important;
+}
+
+// .ReactModal__Content button {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     width: 100%;
+//     margin-top: 0.5em !important;
+//     padding-left: 1.5em;
+//     padding-right: 1.5em;
+// }
+
+// .ReactModal__Content button:last-child {
+//     margin-bottom: 0.5em;
+// }
+//
+// .ReactModal__Content button img {
+//     width: 30px;
+//     height: 30px;
+//     object-fit: contain;
+// }
+
+
+.card {
+    margin-bottom: 0 !important;
+    padding: 1em;
+    background: $color-primary !important;
+    border: none !important;
+    border-radius: $border-radius !important;
+}
+
+span#error {
+  color: red;
+  margin: auto;
+}
+
+.input-swap-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.tabview {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.input-swap-container input {
+    text-align: left;
+
+}
+
+.selected-coin {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0.5em;
+    left: 1em;
+    height: 75%;
+    border-radius: $border-radius;
+}
+
+.max-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0.4em;
+    right: 0.5em;
+    width: 40px;
+    height: 20px;
+    // border-radius: $border-radius;
+    font-size: 14px;
+    margin-top: 1em !important;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: none;
+    background-image: linear-gradient(to top right, #00B0E5, #00D2BC, #00E8A2);
+    font-weight: 600;
+    font-family: inherit !important;
+    color: #031217;
+}
+
+.stake-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 1em;
+    width: 100%;
+    background-image: linear-gradient(to top right, #00B0E5, #00D2BC, #00E8A2);
+    font-weight: 800;
+}
+
+.stake-button:disabled,
+.stake-button[disabled] {
+    font-weight: 200;
+    background-image: linear-gradient(to top right, #00B0E540, #00D2BC40, #00E8A240);
+}
+
+.selected-coin img {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    object-fit: contain;
+    margin-right: 0.2em;
+}
+
+.card-receive {
+    display: flex !important;
+    // justify-content: space-between;
+    margin-bottom: 2em;
+    flex-direction: row !important;
+    background-image: linear-gradient(to top right, #00B0E5, #00D2BC, #00E8A2) !important;
+    color: #000 !important;
+    height: 60%;
+}
+
+.balance {
+   margin-top: 0em;
+   position: absolute;
+   color: #000;
+}
+
+table, td, th {
+  border: collapse;
+  font-size: 13px;
+}
+
+.tr {
+  text-align: right;
+}
+
+table {
+  width: 100%;
+  position: relative;
+  border-collapse: collapse;
+  // visibility: collapse;
+}
+
+.card-receive h4 {
+    margin-top:  0em!important;
+    position: absolute;
+    color: #000 !important;
+    font-size: 15px;
+    right: 1em;
+    top: 1em;
+}
+
+.icon-box {
+    position: relative;
+    width: 55px;
+    height: 55px;
+    border-radius: 100%;
+    background: $color-primary;
+}
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
