@@ -6,7 +6,6 @@ export function CustomInput(props: any) {
 
   const updateValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget
-    console.log(value)
 
     if (value === '') {
       props.setValue(value)
@@ -26,13 +25,12 @@ export function CustomInput(props: any) {
     }
 
     if (split.length === 2) {
-      let whole: string = split[0]
       let decimal: string = split[1]
       if (decimal.length > props.decimals) {
         return
       }
     }
-    // TODO number check
+    
     props.setValue(value)
   }
 

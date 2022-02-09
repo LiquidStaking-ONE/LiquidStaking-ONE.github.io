@@ -139,6 +139,11 @@ span#error {
     font-weight: 600;
     font-family: inherit !important;
     color: #031217;
+    text-transform: uppercase;
+}
+
+.max-button:hover {
+  opacity: 0.8;
 }
 
 .stake-button {
@@ -246,4 +251,55 @@ table {
     height: 72px;
     opacity: 0;
   }
+}
+
+.claim-card {
+  width: 100%;
+  height: 2.5em;
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  background: #1c414d;
+  color: #fff;
+  border: 2px solid #00D2BC50;
+  border-radius: 10px;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 1em;
+}
+
+.claim-coin {
+  height: 12.5px;
+  padding-right: 0.5em;
+}
+
+.claim-button {
+  text-transform: none;
+  width: auto;
+  position: relative;
+  top: 0em;
+  left: -1em;
+}
+
+.redelegate-button {
+  position: static;
+  text-transform: none;
+  width: auto;
+  position: relative;
+  top: 0em;
+  left: -0.4em;
+}
+
+.max-button:disabled,
+.max-button[disabled] {
+    font-weight: 200;
+    background-image: linear-gradient(to top right, #086B89, #087C74, #088767);
+
+    :hover {
+      opacity: 1;
+    }
+}
+
+.max-button[disabled]:hover {
+  opacity: 1;
 }

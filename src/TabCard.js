@@ -2,58 +2,29 @@ import './App.scss';
 import { CustomInput } from './CustomInput.tsx'
 import { View, StyleSheet } from 'react-native';
 import { ethers } from 'ethers';
-import React, { useState, useEffect } from 'react'
-
+import React, { useState, useEffect } from 'react';
+import { roundString } from './Utils.js';
+var bigDecimal = require('js-big-decimal');
 
 export function TabCard(props) {
-  const [availableBalanceRounded, setAvailableBalanceRounded] = useState('0.0000')
-  const [availableBalanceLockedRounded, setAvailableBalanceLockedRounded] = useState('0.0000')
-  const [maxBalance, setMaxBalance] = useState('0.0')
+  const [receiveValue, setReceiveValue] = useState('??');
 
   useEffect(() => {
-    console.log("left", props.availableBalance)
-    let left = props.availableBalance.split('.')[0];
-    let right = props.availableBalance.split('.')[1];
-    let exp = Math.pow(10, right.length);
-    let roundedRight = '' + Math.round( parseInt(right) * 10000 / exp, 10000);
-    if (roundedRight.length < 4) {
-      let diff = 4 - roundedRight.length
-      for(let i = 0; i < diff; i ++) {
-        roundedRight += '0'
+    if (props.exchangeRate.indexOf('?') === -1) {
+      let result;
+      if (props.value === '') {
+        setReceiveValue('0.0000');
+      } else {
+        let parsedValue = new bigDecimal(props.value + (
+          props.value.indexOf('.') === -1 ? "" : "0" ));
+        let exchangeRate = new bigDecimal(props.exchangeRate);
+        result = parsedValue.multiply(exchangeRate);
+        setReceiveValue(result.round(4).value);
       }
+    } else {
+      setReceiveValue('??');
     }
-    let answer = left + '.' + roundedRight
-    // let answer = props.availableBalance
-    setAvailableBalanceRounded(answer);
-  }, [props.availableBalance]);
-
-  useEffect(() => {
-    if (!props.availableLockedBalance) {
-      return
-    }
-    let left = props.availableLockedBalance.split('.')[0];
-    let right = props.availableLockedBalance.split('.')[1];
-    let exp = Math.pow(10, right.length);
-    let roundedRight = '' + Math.round( parseInt(right) * 10000 / exp, 10000);
-    if (roundedRight.length < 4) {
-      let diff = 4 - roundedRight.length
-      for(let i = 0; i < diff; i ++) {
-        roundedRight += '0'
-      }
-    }
-    let answer = left + '.' + roundedRight
-    // let answer = props.availableLockedBalance
-    setAvailableBalanceLockedRounded(answer);
-  }, [props.availableLockedBalance]);
-
-  useEffect(() => {
-    setMaxBalance(props.availableLockedBalance
-    ? ethers.utils.formatUnits(
-        ethers.utils.parseUnits(props.availableBalance).
-        add(ethers.utils.parseUnits(props.availableLockedBalance)))
-    : props.availableBalance);
-  }, [props.availableBalance, props.availableLockedBalance]);
-
+  }, [props.value, props.exchangeRate]);
 
   return (
     <>
@@ -69,8 +40,8 @@ export function TabCard(props) {
             <div className="selected-coin"><img src={props.imgSrc} alt="" /></div>
             <button
               className="max-button"
-              onClick={() => {props.setValue(maxBalance)}}
-              style={{textTransform: "uppercase"}}>Max</button>
+              onClick={() => {props.setValue(props.availableBalance)}}
+            >Max</button>
               <div>
                 <CustomInput
                   decimals={18}
@@ -87,22 +58,16 @@ export function TabCard(props) {
                 <tr>
                   <td className= "tl">Balance</td>
                   <td className= "tr">
-                    {availableBalanceRounded} {props.inSymbol}
-                  </td>
-                </tr>
-                <tr style={{visibility: props.availableLockedBalance ? "inherit" : "collapse"}}>
-                  <td className= "tl">Locked</td>
-                  <td className= "tr">
-                    {availableBalanceLockedRounded} {props.inSymbol}
+                    {roundString(props.availableBalance, 4)} {props.inSymbol}
                   </td>
                 </tr>
                 <tr>
                   <td className= "tl">Exchange rate</td>
-                  <td className= "tr">1 {props.inSymbol} = {props.exchangeRate} {props.outSymbol}</td>
+                  <td className= "tr">1 {props.inSymbol} = {roundString(props.exchangeRate, 4)} {props.outSymbol}</td>
                 </tr>
                 <tr>
                   <td className= "tl">You will receive</td>
-                  <td className= "tr">{ props.exchangeRate * props.value }<span> {props.outSymbol}</span></td>
+                  <td className= "tr">{ receiveValue }<span> {props.outSymbol}</span></td>
                 </tr>
 
               </table>
@@ -113,9 +78,13 @@ export function TabCard(props) {
             <button
               onClick={e=>props.onSubmit(props.submitAction, props.value)}
               className='stake-button'
-              disabled={props.value === '' || ethers.utils.parseUnits(props.value).gte(ethers.utils.parseUnits(maxBalance))}
+              disabled={!props.walletConnected || (props.value === '' ||
+                (props.minValue
+                  ? (ethers.utils.parseUnits(props.value).gte(ethers.utils.parseUnits(props.availableBalance))
+                  || ethers.utils.parseUnits(props.value).lt(ethers.utils.parseUnits(props.minValue)))
+                  : ethers.utils.parseUnits(props.value).gt(ethers.utils.parseUnits(props.availableBalance))))}
               >
-                {props.walletConnected ? props.submitAction : "Connect Wallet"}
+                {props.walletConnected ? props.submitAction : "Connect wallet to continue"}
             </button>
         </View>
 
