@@ -88,6 +88,12 @@ function App() {
             setLoadingScreenVisible(false);
             return;
           }
+          // might occur if user unlocks immediately after connecting
+          if (accounts.length === 0) {
+            alert('Please unlock your Metamask wallet to continue');
+            setLoadingScreenVisible(false);
+            return;
+          }
           setAccount(accounts[0]);
           setStoneContract(new ethers.Contract(contractAddress, stoneAbi, provider.getSigner()));
         } else {
@@ -389,6 +395,12 @@ function App() {
   }
 
   async function setMetamaskProviderFromWindow() {
+    let isWalletUnlocked = await window.ethereum._metamask.isUnlocked();
+    if (!isWalletUnlocked) {
+      alert('Please unlock your wallet to continue');
+      setLoadingScreenVisible(false);
+      return;
+    }
     const localProvider = new ethers.providers.Web3Provider(window.ethereum);
     setWalletType('Metamask');
     setProvider(localProvider);
