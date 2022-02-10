@@ -572,7 +572,7 @@ function App() {
       <TabCard
         imgSrc="images/one.png"
         availableBalance={oneBalance}
-        exchangeRate={exchangeRate}
+        exchangeRate={inverseRate}
         value={stakeAmount}
         setValue={setStakeAmount}
         submitAction="Stake"
@@ -589,7 +589,7 @@ function App() {
       <TabCard
         imgSrc="images/one.png"
         availableBalance={stoneBalance}
-        exchangeRate={inverseRate}
+        exchangeRate={exchangeRate}
         value={stakeAmount}
         setValue={setStakeAmount}
         submitAction="Unstake"
