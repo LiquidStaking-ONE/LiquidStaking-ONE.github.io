@@ -11,7 +11,7 @@ function Landing() {
                             <h1 id="text24">Liquid Staking</h1>
                             <p id="text18">Earn higher yields from defi while contributing to the security of the Harmony Blockchain</p>
                             <ul id="buttons01" className="buttons">
-                                <li><a href="/app" className="button n01" >
+                                <li><a href="/#/app" className="button n01" >
                                     <span className="label" style={{color:"#a2a2b0"}}>Enter App</span></a></li>
                             </ul>
                         </div>

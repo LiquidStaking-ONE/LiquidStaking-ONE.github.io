@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route
 } from "react-router-dom";
@@ -11,12 +11,12 @@ import Landing from "./Landing.js";
 import App from "./App.js";
 
 ReactDOM.render(
-    <BrowserRouter>
+    <HashRouter>
     <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="app" element={<App />} />
+      <Route exact path={""} element={<Landing />} />
+      <Route exact path={"/app"} element={<App />} />
     </Routes>
-    </BrowserRouter>,
+    </HashRouter>,
     document.getElementById('root')
 );
 
