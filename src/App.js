@@ -636,6 +636,10 @@ function App() {
         alert(error.message + (error.data ? '\n' + error.data.message : ''));
         return;
       }
+      let receipt = await transaction.wait();
+      let txHash = receipt.transactionHash;
+      setTransactionHash(txHash);
+      setTransactionSpinnerVisible(false);
       handleLoneContractChange();
     } else if (walletType === 'MathWallet') {
       setTransactionHash('');
@@ -685,6 +689,10 @@ function App() {
         alert(error.message + (error.data ? '\n' + error.data.message : ''));
         return;
       }
+      let receipt = await transaction.wait();
+      let txHash = receipt.transactionHash;
+      setTransactionHash(txHash);
+      setTransactionSpinnerVisible(false);
       handleLoneContractChange();
     } else if (walletType === 'MathWallet') {
       setTransactionHash('');
