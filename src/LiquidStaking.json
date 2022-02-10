@@ -402,7 +402,7 @@
     },
     {
       "inputs": [],
-      "name": "lONE",
+      "name": "nONE",
       "outputs": [
         {
           "internalType": "contract LockedONE",

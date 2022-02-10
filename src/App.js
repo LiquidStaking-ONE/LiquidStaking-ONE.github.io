@@ -18,7 +18,7 @@ var bigDecimal = require('js-big-decimal');
 // global variables
 const stoneAbi = require('./LiquidStaking.json')
 const loneAbi  = require('./LockedONE.json')
-const contractAddress = "0xEf9022C689e519D293767Ca968dF4afCaB80dfbD";
+const contractAddress = "0xdd06e9339C56c6B9668c4C13AC0df22a396Ef64C";
 const rpcUrl = 'https://api.s0.b.hmny.io';
 
 function App() {
@@ -151,7 +151,7 @@ function App() {
       if ((stoneContract) && (provider) && (account)) {
         let address;
         try {
-          address = await stoneContract.lONE();
+          address = await stoneContract.nONE();
         } catch {
           alert('Contract address mismatch, are you on the right network?');
           setLoneContract(null);
@@ -238,6 +238,15 @@ function App() {
   useEffect( () => {
     handleStoneContractChange();
   }, [stoneContract, provider, account, walletType]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if ((account) && (provider) && (stoneContract) && (walletType)) {
+        handleStoneContractChange();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function handleLoneContractChange() {
     if (walletType === "Metamask") {
@@ -571,7 +580,7 @@ function App() {
         autofocusInput={activeTab === "stake"}
         walletConnected={provider !== null}
         inSymbol="ONE"
-        outSymbol="stONE"
+        outSymbol="drONE"
         minValue="100.0"
       />
   )
@@ -587,7 +596,7 @@ function App() {
         onSubmit={submit}
         autofocusInput={activeTab === "unstake"}
         walletConnected={provider !== null}
-        inSymbol="stONE"
+        inSymbol="drONE"
         outSymbol="ONE"
       />
   )
@@ -781,7 +790,7 @@ function App() {
         onRequestClose={() => setLoadingScreenVisible(false)}
         style={{content: {height: "15em", backgroundImage: 'linear-gradient(to top right, #00B0E5, #00D2BC, #00E8A2)'}}}
       >
-        <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100%"}}><div class="lds-ripple"><div></div><div></div></div></div>
+        <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100%"}}><div className="lds-ripple"><div></div><div></div></div></div>
       </Modal>
 
       <Modal
@@ -806,12 +815,12 @@ function App() {
               position: "absolute",
               top: "1em",
               margin: "1em",
-            }}>Your transaction has been confirmed with hash <a href={"https://explorer.testnet.harmony.one/tx/" + transactionHash} style={{color: "#ffffff"}}>{transactionHash}</a>
+            }}>Your transaction has been confirmed with hash <a href={"https://explorer.testnet.harmony.one/tx/" + transactionHash} style={{color: "#ffffff"}} target="_blank">{transactionHash}</a>
             {amountReceived ? <div>You have received {amountReceived} {amountReceivedCurrency ? amountReceivedCurrency : ""}</div> : ""}
             </div> :
             <div>Your transaction is currently processing</div>
           }
-          <div class="lds-ripple" style={{visibility: transactionSpinnerVisible ? "inherit": "collapse"}}><div></div><div></div></div>
+          <div className="lds-ripple" style={{visibility: transactionSpinnerVisible ? "inherit": "collapse"}}><div></div><div></div></div>
         </div>
       </Modal>
     </>
