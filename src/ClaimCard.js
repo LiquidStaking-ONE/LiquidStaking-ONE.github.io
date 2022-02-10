@@ -5,7 +5,7 @@ import { roundString } from './Utils.js';
 export function ClaimCard(props) {
 
   return (
-    <div class="claim-card">
+    <div className="claim-card">
       <div>{roundString(props.amount, 4)} ONE</div>
       <div style={{
         display: "flex",

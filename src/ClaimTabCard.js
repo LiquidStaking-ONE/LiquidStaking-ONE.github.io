@@ -20,19 +20,18 @@ export function ClaimTabCard(props) {
                 : <div style={{
                   width: "100%",
                   }}>{props.claimTickets.map((el, idx) => (
-                    <>
+                    <div key={idx}>
                       <ClaimCard
                         imgSrc={props.imgSrc}
                         amount={el.amount}
                         epoch={el.epoch}
                         onClaim={props.onClaim}
                         onRedelegate={props.onRedelegate}
-                        key={idx}
                         tokenId={el.tokenId}
                         enableClaim={el.enableClaim}
                         enableRedelegate={el.enableRedelegate}
                       />
-                    </>
+                    </div>
                 ))}</div>)
               : <div style={{margin: "auto"}}>Connect wallet to continue</div>}
           </div>

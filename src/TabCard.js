@@ -55,6 +55,7 @@ export function TabCard(props) {
           </div>
           <div className={`card card-receive`} style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
             <table>
+              <tbody>
                 <tr>
                   <td className= "tl">Balance</td>
                   <td className= "tr">
@@ -69,8 +70,8 @@ export function TabCard(props) {
                   <td className= "tl">You will receive</td>
                   <td className= "tr">{ receiveValue }<span> {props.outSymbol}</span></td>
                 </tr>
-
-              </table>
+              </tbody>
+            </table>
           </div>
 
       </div>
