@@ -185,7 +185,7 @@ function App() {
       if ((stoneContract) && (provider) && (account)) {
         let address;
         try {
-          address = await stoneContract.methods.lONE().call();
+          address = await stoneContract.methods.nONE().call();
 
         } catch (error) {
           alert('Contract address mismatch, are you on the right network?');
@@ -198,21 +198,16 @@ function App() {
         setLoneContract(provider.contracts.createContract(loneAbi, address));
         stoneContract.wallet.setSigner( getAddress(account).checksum );
         stoneContract.wallet.signTransaction = async (tx) => {
-          try {
-            const signTx = await window.harmony.signTransaction(tx);
-            return signTx;
-          } catch (e) {
-            console.log(e);
-            return Promise.reject(e);
-          }
+          const signTx = await window.harmony.signTransaction(tx);
+          return signTx;
         };
         let localStoneBalance = numberToString(await stoneContract.methods.balanceOf(account).call());
         setStoneBalance( ethers.utils.formatUnits( ethers.utils.parseUnits( localStoneBalance, "wei" ) ) );
         let totalStaked = numberToString(await stoneContract.methods.totalStaked().call());
         let totalSupply = numberToString(await stoneContract.methods.totalSupply().call());
         // convert to ethers big number
-        totalStaked = ethers.utils.parseUnits( totalStaked );
-        totalSupply = ethers.utils.parseUnits( totalSupply );
+        totalStaked = ethers.utils.parseUnits( totalStaked, "wei" );
+        totalSupply = ethers.utils.parseUnits( totalSupply, "wei" );
         if ( totalSupply.eq( ethers.constants.Zero ) ) {
           setExchangeRate("1.00");
         }
@@ -469,7 +464,7 @@ function App() {
         setTransactionModalVisible(true);
         let transaction;
         try {
-          transaction = stoneContract.methods.stake(
+          transaction = await stoneContract.methods.stake(
             toWei(amount, Units.one)
           ).send(
             {
@@ -694,7 +689,6 @@ function App() {
             from: getAddress(account).checksum, // mandatory!!
           }
         );
-        console.log(transaction);
       } catch (error) {
         setTransactionModalVisible(false);
         setTransactionSpinnerVisible(false);
