@@ -1,6 +1,6 @@
 import './App.scss';
 import { CustomInput } from './CustomInput.tsx'
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { ethers } from 'ethers';
 import React, { useState, useEffect } from 'react';
 import { roundString } from './Utils.js';

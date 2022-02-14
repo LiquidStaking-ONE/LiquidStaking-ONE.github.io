@@ -1,5 +1,4 @@
 import './App.scss';
-import { View } from 'react-native';
 import { roundString } from './Utils.js';
 
 export function ClaimCard(props) {

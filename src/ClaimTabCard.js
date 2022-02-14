@@ -1,6 +1,5 @@
 import './App.scss';
 import { View } from 'react-native';
-import { roundString } from './Utils.js';
 import { ClaimCard } from './ClaimCard.js';
 
 export function ClaimTabCard(props) {

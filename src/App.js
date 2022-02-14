@@ -48,30 +48,38 @@ function App() {
   )
 
   const getCurrentEpoch = async () => {
-    const result = await messenger.send(
-      "hmyv2_getEpoch",
-      [],
-      messenger.chainPrefix,
-      messenger.currentShard,
-    );
-    return result.raw.result;
+    try {
+      const result = await messenger.send(
+        "hmyv2_getEpoch",
+        [],
+        messenger.chainPrefix,
+        messenger.currentShard,
+      );
+      return result.raw.result;
+    } catch (error) {
+      return -1;
+    }
   };
 
   const getRewards = async (address) => {
-    let result = await messenger.send(
-      "hmyv2_getDelegationsByDelegator",
-      [address],
-      messenger.chainPrefix,
-      messenger.currentShard,
-    );
-    result = result.raw.result;
-    let sumRewards = ethers.constants.Zero;
-    result.forEach((item, i) => {
-      sumRewards = sumRewards.add(
-        item.reward + ''
+    try {
+      let result = await messenger.send(
+        "hmyv2_getDelegationsByDelegator",
+        [address],
+        messenger.chainPrefix,
+        messenger.currentShard,
       );
-    });
-    return sumRewards;
+      result = result.raw.result;
+      let sumRewards = ethers.constants.Zero;
+      result.forEach((item, i) => {
+        sumRewards = sumRewards.add(
+          item.reward + ''
+        );
+      });
+      return sumRewards;
+    } catch {
+      return -1;
+    }
   };
 
 
@@ -177,6 +185,11 @@ function App() {
         }
         else {
           let rewards = await getRewards( contractAddress );  // wei, so add directly
+          if ( rewards === -1 ) {
+            alert( 'Could not fetch rewards, please use a different browser' );
+            setLoadingScreenVisible( false );
+            setProvider( null );
+          }
           totalStaked = new bigDecimal( totalStaked );
           totalSupply = new bigDecimal( totalSupply );
           rewards = new bigDecimal( rewards );
@@ -192,7 +205,6 @@ function App() {
         let address;
         try {
           address = await stoneContract.methods.nONE().call();
-
         } catch (error) {
           alert('Contract address mismatch, are you on the right network?');
           setLoneContract(null);
@@ -219,6 +231,11 @@ function App() {
         }
         else {
           let rewards = await getRewards( contractAddress );  // wei, so add directly
+          if ( rewards === -1 ) {
+            alert( 'Could not fetch rewards, please use a different browser' );
+            setLoadingScreenVisible( false );
+            setProvider( null );
+          }
           totalStaked = new bigDecimal( totalStaked );
           totalSupply = new bigDecimal( totalSupply );
           rewards = new bigDecimal( rewards );
@@ -242,8 +259,14 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if ((account) && (provider) && (walletType)) {
+        updateOneBalance();
+      }
       if ((account) && (provider) && (stoneContract) && (walletType)) {
         handleStoneContractChange();
+      }
+      if ((account) && (loneContract) && (walletType)) {
+        handleLoneContractChange();
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -254,8 +277,16 @@ function App() {
       if ((loneContract) && (account)) {
         // ethers bignumber
         let length = await loneContract.balanceOf(account);
+        let localClaimTickets = [];
         // does not work on localhost in firefox
-        let currentEpoch = ethers.BigNumber.from(await getCurrentEpoch());
+        let currentEpoch = await getCurrentEpoch();
+        if (currentEpoch === -1) {
+          setProvider(null);
+          alert('Could not fetch epoch, please use a different browser');
+          setLoadingScreenVisible(false);
+          return;
+        }
+        currentEpoch = ethers.BigNumber.from(currentEpoch);
         for(let i = ethers.constants.Zero; i.lt(length); i = i.add(ethers.constants.One)) {
           let userTokenId = await loneContract.tokenOfOwnerByIndex(account, i);
           let amount = await loneContract.getAmountOfTokenByIndex(userTokenId);
@@ -265,14 +296,15 @@ function App() {
           let enableClaim = currentEpoch.gt(epoch.add(ethers.utils.parseUnits('6', 'wei')));
           let enableRedelegate = currentEpoch.gt(epoch);
           epoch = ethers.utils.formatUnits( epoch, "wei" );
-          setClaimTickets(claimTickets => [...claimTickets, {
+          localClaimTickets.push({
             amount: amount,
             epoch: epoch,
-            tokenId: ethers.utils.formatUnits(userTokenId, 'wei'),
+            tokenId: numberToString(userTokenId),
             enableClaim: enableClaim,
             enableRedelegate: enableRedelegate,
-          }]);
+          });
         }
+        setClaimTickets(localClaimTickets);
       } else {
         setClaimTickets([]);
       }
@@ -280,7 +312,15 @@ function App() {
       if ((loneContract) && (account)) {
         let length = numberToString(await loneContract.methods.balanceOf(account).call());
         length = ethers.utils.parseUnits(length, "wei");
-        let currentEpoch = ethers.BigNumber.from(await getCurrentEpoch());
+        let localClaimTickets = [];
+        let currentEpoch = await getCurrentEpoch();
+        if (currentEpoch === -1) {
+          alert('Could not fetch epoch, please use a different browser');
+          setProvider(null);
+          setLoadingScreenVisible(false);
+          return;
+        }
+        currentEpoch = ethers.BigNumber.from(currentEpoch);
         for(let i = ethers.constants.Zero; i.lt(length); i = i.add(ethers.constants.One)) {
           let hmyCompatI = new BN(i.toString());
           let userTokenId = await loneContract.methods.tokenOfOwnerByIndex(account, hmyCompatI).call();
@@ -298,14 +338,15 @@ function App() {
           let parsedEpoch = ethers.utils.parseUnits(epoch, 'wei');
           let enableClaim = currentEpoch.gt(parsedEpoch.add(ethers.utils.parseUnits('6', 'wei')));
           let enableRedelegate = currentEpoch.gt(parsedEpoch);
-          setClaimTickets(claimTickets => [...claimTickets, {
+          localClaimTickets.push({
             amount: amount,
             epoch: epoch,
             tokenId: numberToString(userTokenId),
             enableClaim: enableClaim,
             enableRedelegate: enableRedelegate,
-          }]);
+          });
         }
+        setClaimTickets(localClaimTickets);
       } else {
         setClaimTickets([]);
       }
@@ -319,7 +360,6 @@ function App() {
   }, [loneContract, account, walletType]);
 
   useEffect( () => {
-    setLoadingScreenVisible(false);
     if (exchangeRate.indexOf('?') === -1) {
       setInverseRate(
         new bigDecimal('1.0').divide(
@@ -330,6 +370,10 @@ function App() {
       setInverseRate('??');
     }
   }, [exchangeRate]);
+
+  useEffect( () => {
+    setLoadingScreenVisible( false );
+  }, [ inverseRate ] );
 
   async function connectMetamask() {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
@@ -463,7 +507,8 @@ function App() {
         let txHash = receipt.transactionHash;
         setTransactionSpinnerVisible(false);
         setTransactionHash(txHash);
-        updateOneBalance();
+        updateOneBalance(); // gas
+        handleStoneContractChange();  // stake tx
       }
     } else if (walletType === "MathWallet") {
       if (!account) {
@@ -494,7 +539,8 @@ function App() {
         let txHash = transaction.transaction.receipt.transactionHash;
         setTransactionHash(txHash);
         setTransactionSpinnerVisible(false);
-        updateOneBalance();
+        updateOneBalance(); // gas
+        handleStoneContractChange();  // stake tx
       }
     } else {
       alert('How did you click here without connecting a wallet?');
@@ -530,7 +576,9 @@ function App() {
         let txHash = receipt.transactionHash;
         setTransactionHash(txHash);
         setTransactionSpinnerVisible(false);
-        handleStoneContractChange();
+        updateOneBalance(); // gas
+        handleStoneContractChange();  // stone value down
+        handleLoneContractChange(); // claim ticket created
       }
     } else if (walletType === "MathWallet") {
       if (!account) {
@@ -561,6 +609,9 @@ function App() {
         setTransactionHash(txHash);
         setTransactionSpinnerVisible(false);
         handleStoneContractChange();
+        updateOneBalance(); // gas
+        handleStoneContractChange();  // stone value down
+        handleLoneContractChange(); // claim ticket created
       }
     } else {
       alert('How did you click here without connecting a wallet?');
@@ -640,7 +691,10 @@ function App() {
       let txHash = receipt.transactionHash;
       setTransactionHash(txHash);
       setTransactionSpinnerVisible(false);
+      // removes the ticket
       handleLoneContractChange();
+      // updates the balance
+      updateOneBalance();
     } else if (walletType === 'MathWallet') {
       setTransactionHash('');
       setTransactionSpinnerVisible(true);
@@ -665,7 +719,10 @@ function App() {
       let txHash = transaction.transaction.receipt.transactionHash;
       setTransactionHash(txHash);
       setTransactionSpinnerVisible(false);
+      // removes the ticket
       handleLoneContractChange();
+      // updates the balance
+      updateOneBalance();
     } else {
       alert('Not possible');
     }
@@ -693,7 +750,9 @@ function App() {
       let txHash = receipt.transactionHash;
       setTransactionHash(txHash);
       setTransactionSpinnerVisible(false);
-      handleLoneContractChange();
+      handleLoneContractChange(); // ticket to be removed
+      updateOneBalance(); // gas
+      handleStoneContractChange();  // stone balance
     } else if (walletType === 'MathWallet') {
       setTransactionHash('');
       setTransactionSpinnerVisible(true);
@@ -718,7 +777,9 @@ function App() {
       let txHash = transaction.transaction.receipt.transactionHash;
       setTransactionHash(txHash);
       setTransactionSpinnerVisible(false);
-      handleLoneContractChange();
+      handleLoneContractChange(); // ticket to be removed
+      updateOneBalance(); // gas
+      handleStoneContractChange();  // stone balance
     } else {
       alert('Not possible');
     }
@@ -829,7 +890,7 @@ function App() {
               position: "absolute",
               top: "1em",
               margin: "1em",
-            }}>Your transaction has been confirmed with hash <a href={"https://explorer.testnet.harmony.one/tx/" + transactionHash} style={{color: "#ffffff"}} target="_blank">{transactionHash}</a>
+            }}>Your transaction has been confirmed with hash <a href={"https://explorer.testnet.harmony.one/tx/" + transactionHash} style={{color: "#ffffff"}} target="_blank" rel="noreferrer">{transactionHash}</a>
             {amountReceived ? <div>You have received {amountReceived} {amountReceivedCurrency ? amountReceivedCurrency : ""}</div> : ""}
             </div> :
             <div>Your transaction is currently processing</div>
