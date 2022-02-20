@@ -289,6 +289,7 @@ function App() {
         currentEpoch = ethers.BigNumber.from(currentEpoch);
         for(let i = ethers.constants.Zero; i.lt(length); i = i.add(ethers.constants.One)) {
           let userTokenId = await loneContract.tokenOfOwnerByIndex(account, i);
+          userTokenId = ethers.utils.formatUnits( userTokenId, "wei" );
           let amount = await loneContract.getAmountOfTokenByIndex(userTokenId);
           amount = ethers.utils.formatUnits( amount );
           let epoch = await loneContract.getEpochOfTokenByIndex(userTokenId);
