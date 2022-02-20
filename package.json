@@ -1,7 +1,7 @@
 {
   "name": "one",
   "version": "0.1.0",
-  "homepage": "https://liquidstaking-one.github.io",
+  "homepage": "https://liquidstaking.one",
   "private": true,
   "dependencies": {
     "@harmony-js/core": "^0.1.57",
